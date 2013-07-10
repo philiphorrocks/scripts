@@ -180,7 +180,7 @@ class installWAS():
             print "FAIL: Cannot find Websphere binaries"
             print "FAIL: Please make sure you have the following packages in the root directory"
             print "**********REQUIRED PACKAGES FOR THIS INSTALLATION*************"
-            print "InstalMgr1.5.2_LNX_X86_WAS_8,5.zip"
+            print "InstalMgr1.5.2_LNX_X86_WAS_8.5.zip"
             print "WAS_ND_V8.5_1_OF_1"
             print "WAS_ND_V8.5_1_OF_2"
             print "WAS_ND_V8.5_1_OF_3"
