@@ -1,0 +1,264 @@
+######################################################
+# Scorecard Selenium Main Test Script
+# Version 0.1
+######################################################
+
+import unittest
+import sys
+import time
+import random
+from selenium import webdriver
+from selenium.webdriver.common.by import By
+from selenium.webdriver.common.keys import Keys
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.common.exceptions import NoSuchElementException
+
+
+
+class SeleniumScorecard(unittest.TestCase):
+
+    #Global variables
+    global users
+    global localtime
+
+    #stores user list
+    
+    users = [1000,1001,10002,10003]
+
+    localtime = time.asctime(time.localtime(time.time()))
+
+
+
+    def setUp(self):
+        self.driver = webdriver.Firefox()
+        self.driver.implicitly_wait(10)
+        self.base_url = "http://"
+        self.verificationErrors = []
+        self.accept_next_alert = True
+
+
+
+    def test_teamRating(self):
+
+        driver = self.driver
+        driver.get(self.base_url)
+        driver.find_element_by_id("txtGlobalID").clear()
+
+        #Set the initial status
+        status = "success"
+
+        for user in users:
+
+            print "Testing with user: " + str(user)
+
+            driver.find_element_by_id("txtGlobalID").send_keys(random.choice(users))
+            driver.find_element_by_id("txtPwd").clear()
+            driver.find_element_by_id("txtPwd").send_keys("ddsadadsa")
+            button = driver.find_element_by_xpath("id('btnConfirm__3')")
+            button.click()
+
+            try:
+                #Close the popup javascript box
+                driver.switch_to_alert()
+                buttonDiag = driver.find_element_by_xpath("id('ctl00_ContentPlaceHolder1_dlgIntro_tmpl_btnExitIntro__4')")
+                buttonDiag.click()
+                print "Accepted Confirmation"
+
+                print "Clicking on test Usergroup 1 form"
+                print "---------------------------------\n"
+
+                #Get number of users to test
+
+                count = 1
+
+                while count < 3:
+
+                    try:
+                        #Enter Entries for Q1 box1
+                        driver.find_element_by_id("ContentPlaceHolder1_RaterGrid")
+
+                        #Enter Entries for Q1 box1
+                        box1 = WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.XPATH, "html/body/form/div[4]/table[1]/tbody/tr[2]/td/div/div[2]/table/tbody/tr[" + str(count) + "]/td[7]/div/table/tbody/tr/td[2]")))
+                        box1.click()
+
+                        #Now choose the drop down
+                        selector1 = WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.XPATH, "html/body/form/div[4]/table[1]/tbody/tr[2]/td/div/div[2]/table/tbody/tr[" + str(count) + "]/td[7]/div/table/tbody/tr/td[2]/select")))
+                        selector1.click()
+                        selector1.send_keys(str(random.randint(1, 10)))
+
+                        #Enter Entries for Q1 box2
+                        box2 = WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.XPATH, "html/body/form/div[4]/table[1]/tbody/tr[2]/td/div/div[2]/table/tbody/tr[" + str(count) + "]/td[7]/div/table/tbody/tr/td[3]")))
+                        box2.click()
+
+                        #Now choose the drop down
+                        selector2 = WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.XPATH, "html/body/form/div[4]/table[1]/tbody/tr[2]/td/div/div[2]/table/tbody/tr[" + str(count) + "]/td[7]/div/table/tbody/tr/td[3]/select")))
+                        selector2.click()
+                        selector2.send_keys(str(random.randint(1, 10)))
+
+                        #Add comment
+
+                        comment1 = WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.XPATH, "html/body/form/div[4]/table[1]/tbody/tr[2]/td/div/div[2]/table/tbody/tr[" + str(count) + "]/td[7]/div/table/tbody/tr/td[4]")))
+                        comment1.click()
+                        comment1 = WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.XPATH, "html/body/form/div[4]/table[1]/tbody/tr[2]/td/div/div[2]/table/tbody/tr[" + str(count) + "]/td[7]/div/table/tbody/tr/td[4]/input")))
+                        comment1.send_keys("Test user "+ localtime)
+
+                        time.sleep(1)
+
+                        driver.find_element_by_xpath("html/body/form/div[4]/table[1]/tbody/tr[2]/td/div/div[1]").send_keys(Keys.ARROW_DOWN)
+
+                        count = count + 1
+
+
+                    except:
+
+                        print "Error filling in values for A Test Usergroup 1"
+                        print "----------------------------------------------"
+                        status = "fail"
+
+
+                print "Saving values\n"
+
+                driver.find_element_by_xpath( "html/body/form/table[3]/tbody/tr/td[1]/div/div[1]/table/tbody/tr[1]/td[2]/table/tbody/tr/td[2]/nobr").click()
+
+                print "Clicking on test Usergroup 2 form"
+                print "---------------------------------"
+
+                driver.find_element_by_xpath("html/body/form/table[3]/tbody/tr/td[1]/div/div[1]/table/tbody/tr[1]/td[2]/table/tbody/tr/td[2]/nobr").click()
+
+                count = 1
+
+                #Fill in the values for the second test column
+                while count < 3:
+
+                    try:
+
+                        #Enter Entries for Q1 box1
+                        driver.find_element_by_id("ContentPlaceHolder1_RaterGrid")
+
+
+                        #Enter Entries for Q1 box1
+                        box1 = WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.XPATH, "html/body/form/div[4]/table[1]/tbody/tr[2]/td/div/div[2]/table/tbody/tr[" + str(count) + "]/td[7]/div/table/tbody/tr/td[2]")))
+                        box1.click()
+
+                        #Now choose the drop down
+                        selector1 = WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.XPATH, "html/body/form/div[4]/table[1]/tbody/tr[2]/td/div/div[2]/table/tbody/tr[" + str(count) + "]/td[7]/div/table/tbody/tr/td[2]/select")))
+                        selector1.click()
+                        selector1.send_keys(str(random.randint(1, 10)))
+
+                        #Enter Entries for Q1 box2
+                        box2 = WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.XPATH, "html/body/form/div[4]/table[1]/tbody/tr[2]/td/div/div[2]/table/tbody/tr[" + str(count) + "]/td[7]/div/table/tbody/tr/td[3]")))
+                        box2.click()
+
+                        #Now choose the drop down
+                        selector2 = WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.XPATH, "html/body/form/div[4]/table[1]/tbody/tr[2]/td/div/div[2]/table/tbody/tr[" + str(count) + "]/td[7]/div/table/tbody/tr/td[3]/select")))
+                        selector2.click()
+                        selector2.send_keys(str(random.randint(1, 10)))
+
+                        #Add comment
+                        comment2 = WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.XPATH, "html/body/form/div[4]/table[1]/tbody/tr[2]/td/div/div[2]/table/tbody/tr[" + str(count) + "]/td[7]/div/table/tbody/tr/td[4]")))
+                        comment2.click()
+                        comment2 = WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.XPATH, "html/body/form/div[4]/table[1]/tbody/tr[2]/td/div/div[2]/table/tbody/tr[" + str(count) + "]/td[7]/div/table/tbody/tr/td[4]/input")))
+                        comment2.send_keys("Test user "+localtime)
+
+                        time.sleep(1)
+
+                        driver.find_element_by_xpath("html/body/form/div[4]/table[1]/tbody/tr[2]/td/div/div[1]").send_keys(Keys.ARROW_DOWN)
+                        count = count + 1
+
+
+                    except:
+
+                        print "Error filling values in the A Test Usergroup 2"
+                        status = "fail"
+                        sys.exit(1)
+
+
+            except:
+
+                print 'Selenium: Error lost focus'
+                status = "fail"
+
+
+
+            finally:
+
+                if status != "fail":
+
+                    try:
+                        driver.find_element_by_xpath("html/body/form/div[4]/table[2]/tbody/tr/td[1]/table[2]/tbody/tr/td/table/tbody/tr/td[1]/img").click()
+
+                        print "Saving the form and submitting"
+                        print "------------------------------"
+
+                        print "Accept confirmation popups"
+
+                        #Close the popup confirmation javascript box
+                        driver.switch_to_alert()
+                        time.sleep(5)
+                        driver.find_element_by_xpath("html/body/form/div[8]/div[2]/table/tbody/tr[1]/td[2]/div/div[2]/table[1]/tbody/tr/td/table/tbody/tr/td[1]/img").click()
+                        print "Confirmation Accepted"
+
+                        driver.get_screenshot_as_file('D:\screenshoot.png')
+
+                        driver.switch_to_alert()
+                        driver.find_element_by_xpath("html/body/form/div[4]/div[2]/div[2]/table/tbody/tr[1]/td[2]/div/div/table/tbody/tr/td/table/tbody/tr/td[1]/img").click()
+                        print "Submission panel closed"
+
+                        driver.get_screenshot_as_file('D:\screenshoot.png')
+
+                        print "Signing Out"
+                        driver.find_element_by_xpath("html/body/form/table[1]/tbody/tr[2]/td[6]/a").click()
+                        driver.switch_to_alert().accept()
+                        print "test completed\n"
+
+                    except:
+
+                        print "Error saving the form.."
+
+                else:
+
+                    print "Failed Test!"
+
+
+
+    def is_element_present(self, how, what):
+        try:
+            self.driver.find_element(by=how, value=what)
+        except NoSuchElementException, e:
+            return False
+        return True
+
+
+    def is_alert_present(self):
+        try:
+            self.driver.switch_to_alert()
+        except NoAlertPresentException, e:
+            return False
+        return True
+
+
+    def close_alert_and_get_its_text(self):
+        try:
+            alert = self.driver.switch_to_alert()
+            alert_text = alert.text
+            if self.accept_next_alert:
+                alert.accept()
+            else:
+                alert.dismiss()
+            return alert_text
+        finally:
+            self.accept_next_alert = True
+
+
+    def tearDown(self):
+        self.driver.quit()
+        self.assertEqual([], self.verificationErrors)
+
+
+
+####################################
+# Main Class
+####################################
+if __name__ == "__main__":
+    unittest.main()
